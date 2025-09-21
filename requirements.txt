@@ -1,0 +1,19 @@
+# Requisições à API GBIF
+requests
+
+# Manipulação de dados
+pandas
+
+# Banco de dados MongoDB
+pymongo
+
+# Geoprocessamento
+geopy
+folium
+
+# Interface web interativa
+streamlit
+streamlit-folium
+
+# Utilitário para lidar com datas
+python-dateutil
