@@ -15,7 +15,7 @@ DB_NAME = "gbif"
 COLLECTION = "occurrences"
 CSV_FILE = "dataset/gbif_brasil.csv"
 
-@st.cache_data
+@st.cache_data(show_spinner="Carregando dados do GBIF, aguarde...")
 def ingest_data():
     Path("database").mkdir(exist_ok=True)
     Path("dataset").mkdir(exist_ok=True)

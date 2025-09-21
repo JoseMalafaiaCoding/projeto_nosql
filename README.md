@@ -56,7 +56,7 @@ Este projeto realiza a **coleta de dados ambientais do GBIF (Global Biodiversity
 
 * **Python 3.9+**
 * **MongoDB** em execução local ou remoto (Atlas, Docker, etc.)
-* **SQLite** (já embutido no Python)
+* **SQLite**
 
 ---
 
@@ -65,11 +65,8 @@ Este projeto realiza a **coleta de dados ambientais do GBIF (Global Biodiversity
 Clone o repositório e entre na pasta do projeto:
 
 ```bash
-git clone https://github.com/seuusuario/projeto-gbif-brasil.git
-cd projeto-gbif-brasil
+git clone https://github.com/JoseMalafaiaCoding/projeto_nosql
 ```
-
-Execute o arquivo run_app.bat
 ---
 
 ## ▶️ Execução do Projeto
@@ -81,13 +78,7 @@ Execute o arquivo run_app.bat
 
 2. **Rodar a interface**
 
-   ```bash
-   streamlit run main.py
-   ```
-
-3. **Acessar a aplicação**
-
-   * Abra o navegador em: [http://localhost:8501](http://localhost:8501)
+   * Execute o arquivo run_app.bat
 
 ---
 
@@ -96,15 +87,14 @@ Execute o arquivo run_app.bat
 ```
 projeto-gbif-brasil/
 │── main.py                 # Aplicação Streamlit
-│── gbif_collector.py       # Classe para coletar dados do GBIF
-│── sqlite_manager.py       # Classe para criação das dimensões no SQLite
-│── mongodb_manager.py      # Classe para ingestão no MongoDB
-│── geo_processor.py        # Classe para geoprocessamento com geopy/folium
-│── integrator.py           # Classe para integrar MongoDB e SQLite
+│── coleta_gbif.py          # Classe para coletar dados do GBIF
+│── db_sqlite.py            # Classe para criação das dimensões no SQLite
+│── db_mongo.py             # Classe para ingestão no MongoDB
+│── geoprocessamento.py     # Classe para geoprocessamento com geopy/folium
 │── requirements.txt        # Dependências do projeto
 │── README.md               # Documentação do projeto
 │── database/               # Banco SQLite criado automaticamente
-│── data/                   # CSVs baixados do GBIF
+│── dataset/                # CSVs baixados do GBIF
 ```
 
 ---
@@ -119,10 +109,6 @@ projeto-gbif-brasil/
 
 ## ⚠️ Observações Importantes
 
-* O volume total de registros do GBIF pode ultrapassar **30 milhões**, o que gera muitos GBs de dados. Para testes locais, recomenda-se coletar apenas uma amostra (usando filtros adicionais, como `year`, `taxonKey`, ou limitar páginas).
+* O volume total de registros do GBIF pode ultrapassar **30 milhões**, o que gera muitos GBs de dados. Para testes locais, recomenda-se coletar apenas uma amostra. Por padrão é feita uma ingestão de 5 mil registros que pode ser alterado no arquivo coleta_gbif.py, a API é limitada, então mesmo com um volume baixo de dados pode levar alguns minutos pra finalizar a execução.
 * O MongoDB precisa estar em execução antes de rodar o projeto.
 * O SQLite será criado automaticamente em `database/gbif.db`.
-
----
-
-👉 Quer que eu adapte este `README.md` para ficar pronto para publicar no **GitHub**, com badges (Python, MongoDB, Streamlit) e prints da interface?
