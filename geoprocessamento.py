@@ -62,35 +62,3 @@ class GeoProcessor:
         # Ordena pela menor distância
         distances = sorted(distances, key=lambda x: x["distance_km"])
         return distances[:n]
-
-    def plot_map(self, latitude=None, longitude=None, nearest_points=None, save_as="map.html"):
-        """Plota o mapa com Folium, mostrando o ponto central e os pontos mais próximos"""
-        if latitude is None or longitude is None:
-            latitude, longitude = 0, 0  # centro "neutro"
-
-        # Cria o mapa
-        m = folium.Map(location=[latitude, longitude], zoom_start=4)
-
-        # Popup de clique no mapa (retorna coordenadas)
-        m.add_child(folium.LatLngPopup())
-
-        # Marca o ponto informado
-        folium.Marker(
-            [latitude, longitude],
-            popup="Ponto informado",
-            icon=folium.Icon(color="red", icon="info-sign")
-        ).add_to(m)
-
-        # Marca os pontos mais próximos
-        if nearest_points:
-            for p in nearest_points:
-                folium.Marker(
-                    [p["latitude"], p["longitude"]],
-                    popup=f"{p['scientificName']} - {p['distance_km']:.2f} km",
-                    icon=folium.Icon(color="blue", icon="leaf")
-                ).add_to(m)
-
-        # Salva e retorna
-        m.save(save_as)
-        print(f"Mapa salvo em {save_as}")
-        return m
