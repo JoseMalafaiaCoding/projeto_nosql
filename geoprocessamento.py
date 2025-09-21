@@ -1,6 +1,5 @@
 from pymongo import MongoClient
 from geopy.distance import geodesic
-import folium
 
 class GeoProcessor:
     def __init__(self, mongo_uri, mongo_db, mongo_collection):

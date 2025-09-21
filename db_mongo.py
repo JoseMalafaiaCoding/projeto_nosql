@@ -1,6 +1,5 @@
 import pandas as pd
 from pymongo import MongoClient
-import json
 import ast
 
 class MongoFactIngestorFromCSV:

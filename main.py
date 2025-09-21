@@ -51,8 +51,13 @@ if "click_coords" not in st.session_state:
 if "nearest_points" not in st.session_state:
     st.session_state.nearest_points = []
 
-map_center = [-14.2350, -51.9253]  # centro aproximado do Brasil
-m = folium.Map(location=map_center, zoom_start=4)
+if "zoom" not in st.session_state:
+    st.session_state.zoom = 4
+if "map_center" not in st.session_state:
+    st.session_state.map_center = [-14.2350, -51.9253]  # Brasil
+
+# Criar mapa com valores da sessão
+m = folium.Map(location=st.session_state.map_center, zoom_start=st.session_state.zoom)
 
 if st.session_state.click_coords:
     lat, lon = st.session_state.click_coords
@@ -81,9 +86,8 @@ if map_data and map_data["last_clicked"]:
     # Atualiza estado
     st.session_state.click_coords = (lat, lon)
     st.session_state.nearest_points = geo.get_nearest_points(lat, lon, n=3)
-
+    st.session_state.map_center = [lat, lon]
     st.rerun()
-
 # Mostrar lista de ocorrências mais próximas
 if st.session_state.nearest_points:
     st.subheader("🔎 Ocorrências mais próximas")
@@ -117,31 +121,3 @@ if st.session_state.nearest_points:
 
             except Exception as e:
                 st.error(f"Erro ao carregar imagens da referência: {e}")
-        
-def mostrar_imagens_ocorrencia(record, max_images=3):
-    """
-    Mostra imagens de uma ocorrência no Streamlit.
-    record: documento do MongoDB com campo 'references' e 'format'
-    """
-    # Verifica se há referência e formato válido
-    if not record.get("references") or not record.get("format"):
-        st.warning("Nenhuma referência de imagem disponível para esta ocorrência.")
-        return
-
-    if record["format"] not in ["image/jpeg", "image/png"]:
-        st.info(f"Formato não suportado: {record['format']}")
-        return
-
-    url = record["references"]
-    try:
-        resp = requests.get(url, timeout=10)
-        resp.raise_for_status()
-        soup = BeautifulSoup(resp.text, "html.parser")
-
-        # Pega a imagem principal do meta og:image
-        og_img = soup.find("meta", property="og:image")
-        if og_img:
-            st.image(og_img["content"], caption="Imagem principal")
-
-    except Exception as e:
-        st.error(f"Erro ao carregar imagens da referência: {e}")

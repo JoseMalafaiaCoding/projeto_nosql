@@ -4,7 +4,7 @@ from time import sleep
 from pathlib import Path
 
 class GBIFCollector:
-    def __init__(self, country="BR", has_coordinate=True, page_limit=300, max_records=1_000, output_file="dataset/gbif_brasil.csv"):
+    def __init__(self, country="BR", has_coordinate=True, page_limit=300, max_records=20_000, output_file="dataset/gbif_brasil.csv"):
         self.base_url = "https://api.gbif.org/v1/occurrence/search"
         self.country = country
         self.has_coordinate = has_coordinate

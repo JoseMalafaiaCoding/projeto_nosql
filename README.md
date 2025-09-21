@@ -30,7 +30,7 @@ Este projeto realiza a **coleta de dados ambientais do GBIF (Global Biodiversity
      * `kingdomKey, phylumKey, classKey, orderKey, familyKey, genusKey, speciesKey`
      * `scientificName, scientificNameAuthorship`
      * `decimalLatitude, decimalLongitude` → armazenados no BSON dentro de `coordenadas`.
-     * `continent, stateProvince, gadm, year, month, day, eventDate, media, recordedBy, country, locality, municipality, identifiedBy, eventTime, eventType, sex, habitat`.
+     * `continent, stateProvince, gadm, year, month, day, eventDate, media, recordedBy, country, locality, municipality, identifiedBy, eventTime, eventType, sex, habitat, references, format`.
 
 4. **Relacionamento MongoDB ↔ SQLite**
 
@@ -111,4 +111,4 @@ projeto-gbif-brasil/
 
 * O volume total de registros do GBIF pode ultrapassar **30 milhões**, o que gera muitos GBs de dados. Para testes locais, recomenda-se coletar apenas uma amostra. Por padrão é feita uma ingestão de 5 mil registros que pode ser alterado no arquivo coleta_gbif.py, a API é limitada, então mesmo com um volume baixo de dados pode levar alguns minutos pra finalizar a execução.
 * O MongoDB precisa estar em execução antes de rodar o projeto.
-* O SQLite será criado automaticamente em `database/gbif.db`.
+* O SQLite será criado automaticamente em `database/taxonomy.db`.
