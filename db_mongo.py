@@ -1,5 +1,7 @@
 import pandas as pd
 from pymongo import MongoClient
+import json
+import ast
 
 class MongoFactIngestorFromCSV:
     def __init__(self, csv_file, mongo_uri, mongo_db, mongo_collection):
@@ -20,7 +22,7 @@ class MongoFactIngestorFromCSV:
             "year", "month", "day", "eventDate",
             "media", "recordedBy", "country", "locality",
             "municipality", "identifiedBy", "eventTime",
-            "eventType", "sex", "habitat"
+            "eventType", "sex", "habitat", "references"
         ]
 
     def connect(self):
@@ -50,7 +52,21 @@ class MongoFactIngestorFromCSV:
                 "decimalLatitude": lat,
                 "decimalLongitude": lon
             }
+            # Extrair 'references' do campo 'media'
+            media_str = doc.get("media")
+            format = None
+            if pd.notna(media_str):
+                try:
+                    media_json = ast.literal_eval(media_str)
+                    if isinstance(media_json, list) and len(media_json) > 0:
+                        # Pega o primeiro item que tenha 'references'
+                        format = media_json[0].get("format")
+                    elif isinstance(media_json, dict):
+                        format = media_json.get("format")
+                except Exception as e:
+                    print(f"[WARN] Erro ao processar campo 'media': {e}")
 
+            doc["format"] = format
             records.append(doc)
         return records
 

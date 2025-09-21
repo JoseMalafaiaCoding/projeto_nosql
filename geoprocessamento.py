@@ -33,7 +33,9 @@ class GeoProcessor:
              "orderKey": 1,
              "familyKey": 1,
              "genusKey": 1,
-             "speciesKey": 1}
+             "speciesKey": 1,
+             "format": 1,
+             "references": 1}
         )
 
         base_point = (latitude, longitude)
@@ -56,7 +58,9 @@ class GeoProcessor:
                     "orderKey": doc.get("orderKey"),
                     "familyKey": doc.get("familyKey"),
                     "genusKey": doc.get("genusKey"),
-                    "speciesKey": doc.get("speciesKey")
+                    "speciesKey": doc.get("speciesKey"),
+                    "references": doc.get("references"),
+                    "format": doc.get("format")
                 })
 
         # Ordena pela menor distância

@@ -1,13 +1,12 @@
 import streamlit as st
 from streamlit_folium import st_folium
 import folium
-from pymongo import MongoClient
-from geopy.distance import geodesic
 from geoprocessamento import *
 from db_sqlite import *
 from db_mongo import *
 from pathlib import Path
 from coleta_gbif import *
+from bs4 import BeautifulSoup
 
 # Configuração do Mongo
 MONGO_URI = "mongodb://localhost:27017/"
@@ -92,10 +91,57 @@ if st.session_state.nearest_points:
         st.write(
             f"""**{p['scientificName']}** — 📍 ({p['latitude']}, {p['longitude']}) — 
             Distância: {p['distance_km']:.2f} km\n
-            Reino: {taxonomy["kingdom"].get(p["kingdomKey"])}\n
+            Reino: {taxonomy['kingdom'].get(p['kingdomKey'])}\n
             Filo: {taxonomy['phylum'].get(p['phylumKey'])}\n
             Classe: {taxonomy['class'].get(p['classKey'])}\n
             Ordem: {taxonomy['order'].get(p['orderKey'])}\n
             Família: {taxonomy['family'].get(p['familyKey'])}\n
             Gênero: {taxonomy['genus'].get(p['genusKey'])}\n
             Espécie: {taxonomy['species'].get(p['speciesKey'])}""")
+        if not p["references"] or not p["format"]:
+            st.warning("Nenhuma referência de imagem disponível para esta ocorrência.")
+        elif p["format"] not in ["image/jpeg", "image/png"]:
+            st.info(f"Formato não suportado: {p['format']}")
+        
+        else:
+            url = p["references"]
+            try:
+                resp = requests.get(url, timeout=10)
+                resp.raise_for_status()
+                soup = BeautifulSoup(resp.text, "html.parser")
+
+                # Pega a imagem principal do meta og:image
+                og_img = soup.find("meta", property="og:image")
+                if og_img:
+                    st.image(og_img["content"], caption="Imagem principal")
+
+            except Exception as e:
+                st.error(f"Erro ao carregar imagens da referência: {e}")
+        
+def mostrar_imagens_ocorrencia(record, max_images=3):
+    """
+    Mostra imagens de uma ocorrência no Streamlit.
+    record: documento do MongoDB com campo 'references' e 'format'
+    """
+    # Verifica se há referência e formato válido
+    if not record.get("references") or not record.get("format"):
+        st.warning("Nenhuma referência de imagem disponível para esta ocorrência.")
+        return
+
+    if record["format"] not in ["image/jpeg", "image/png"]:
+        st.info(f"Formato não suportado: {record['format']}")
+        return
+
+    url = record["references"]
+    try:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.text, "html.parser")
+
+        # Pega a imagem principal do meta og:image
+        og_img = soup.find("meta", property="og:image")
+        if og_img:
+            st.image(og_img["content"], caption="Imagem principal")
+
+    except Exception as e:
+        st.error(f"Erro ao carregar imagens da referência: {e}")
