@@ -1,1 +1,4 @@
 __pycache__/
+bkp/
+database/taxonomy.db
+dataset/gbif_brasil.csv

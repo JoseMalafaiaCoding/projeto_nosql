@@ -48,6 +48,7 @@ Este projeto realiza a **coleta de dados ambientais do GBIF (Global Biodiversity
    * Exibe o mapa interativo.
    * Ao clicar em um ponto, são exibidas as **3 ocorrências mais próximas**.
    * As informações taxonômicas correspondentes (reino, filo, família, etc.) são carregadas do SQLite e mostradas ao lado das ocorrências.
+   * São mostradas as imagens das espécies após o apontamento no mapa
    * O mapa é atualizado dinamicamente conforme o usuário interage.
 
 ---
